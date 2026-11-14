@@ -12,6 +12,10 @@
         {
             "file": "policy/policy.json",
             "hash": "2b84c9dc5aafcf88212a0467500dabd80db4dc93d29aa995c21e2d330f657971"
+        },
+        {
+            "file": "policy/scope.json",
+            "hash": "4e7f754d296f3ee83f88df53449226028494b7b80e5d00445cb51c7cad665fc9"
         }
     ]
 }
