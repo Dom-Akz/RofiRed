@@ -1,0 +1,17 @@
+{
+    "manifest_name": "RofiRed policy integrity manifest",
+    "algorithm": "sha256",
+    "policy_version": "1.1",
+    "approved_by": "",
+    "approved_on": "",
+    "files": [
+        {
+            "file": "policy/MissionPolicy.md",
+            "hash": "cd3bf875e9e89f7183b549cddb4290840f92790462a1d47a82ddc8395e8b872c"
+        },
+        {
+            "file": "policy/policy.json",
+            "hash": "2b84c9dc5aafcf88212a0467500dabd80db4dc93d29aa995c21e2d330f657971"
+        }
+    ]
+}
