@@ -2,3 +2,7 @@
 .env.*
 !.env.example
 *.log
+*.db
+data/
+*.db-wal
+*.db-shm
