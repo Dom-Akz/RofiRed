@@ -1,0 +1,635 @@
+{
+    "manifest_name": "RofiRed arsenal manifest",
+    "manifest_version": "1.0",
+    "policy_version": "1.0",
+    "execution": {
+        "shell": false,
+        "env": {
+            "LANG": "C",
+            "LC_ALL": "C"
+        },
+        "default_timeout_s": 300,
+        "max_stored_output_bytes": 2000000,
+        "max_llm_output_chars": 12000
+    },
+    "parameter_types": {
+        "host": "One IP address that is listed in the target's ips and inside its allowed ip_ranges",
+        "port_list": "Ports or ranges such as 22,80,8000-8100, all inside the target's allowed ports",
+        "url": "http or https URL whose host and port are inside the target's scope, no credentials in the URL",
+        "enum": "One value from the listed values",
+        "regex": "Text that fully matches the listed pattern",
+        "int_range": "Integer between min and max"
+    },
+    "tools": [
+        {
+            "name": "nmap",
+            "kind": "binary",
+            "binary": "nmap",
+            "version": "7.993",
+            "version_argv": [
+                "nmap",
+                "--version"
+            ],
+            "version_regex": "Nmap version ([0-9.]+)",
+            "templates": [
+                {
+                    "id": "nmap.host_discovery",
+                    "description": "Check whether a host is up, without scanning ports",
+                    "level": "N0",
+                    "touches_target": true,
+                    "targets": [
+                        "WebApp",
+                        "LinuxMachine",
+                        "ActiveDirectory"
+                    ],
+                    "timeout_s": 120,
+                    "argv": [
+                        "nmap",
+                        "-sn",
+                        "-n",
+                        "-oX",
+                        "-",
+                        "{host}"
+                    ],
+                    "parameters": {
+                        "host": {
+                            "type": "host"
+                        }
+                    },
+                    "output": "xml"
+                },
+                {
+                    "id": "nmap.port_scan",
+                    "description": "TCP connect scan of the chosen ports, open ports only",
+                    "level": "N1",
+                    "touches_target": true,
+                    "targets": [
+                        "WebApp",
+                        "LinuxMachine",
+                        "ActiveDirectory"
+                    ],
+                    "timeout_s": 900,
+                    "argv": [
+                        "nmap",
+                        "-sT",
+                        "-Pn",
+                        "-n",
+                        "--open",
+                        "-T3",
+                        "-p",
+                        "{ports}",
+                        "-oX",
+                        "-",
+                        "{host}"
+                    ],
+                    "parameters": {
+                        "host": {
+                            "type": "host"
+                        },
+                        "ports": {
+                            "type": "port_list"
+                        }
+                    },
+                    "output": "xml"
+                },
+                {
+                    "id": "nmap.service_scan",
+                    "description": "Service and version detection on the chosen ports",
+                    "level": "N1",
+                    "touches_target": true,
+                    "targets": [
+                        "WebApp",
+                        "LinuxMachine",
+                        "ActiveDirectory"
+                    ],
+                    "timeout_s": 900,
+                    "argv": [
+                        "nmap",
+                        "-sT",
+                        "-sV",
+                        "-Pn",
+                        "-n",
+                        "--open",
+                        "-T3",
+                        "-p",
+                        "{ports}",
+                        "-oX",
+                        "-",
+                        "{host}"
+                    ],
+                    "parameters": {
+                        "host": {
+                            "type": "host"
+                        },
+                        "ports": {
+                            "type": "port_list"
+                        }
+                    },
+                    "output": "xml"
+                },
+                {
+                    "id": "nmap.smb_info",
+                    "description": "Read-only SMB information: OS, protocol versions, security mode",
+                    "level": "N1",
+                    "touches_target": true,
+                    "targets": [
+                        "LinuxMachine",
+                        "ActiveDirectory"
+                    ],
+                    "timeout_s": 300,
+                    "argv": [
+                        "nmap",
+                        "-sT",
+                        "-Pn",
+                        "-n",
+                        "-p",
+                        "{ports}",
+                        "--script",
+                        "smb-os-discovery,smb-protocols,smb-security-mode",
+                        "-oX",
+                        "-",
+                        "{host}"
+                    ],
+                    "parameters": {
+                        "host": {
+                            "type": "host"
+                        },
+                        "ports": {
+                            "type": "port_list"
+                        }
+                    },
+                    "output": "xml"
+                },
+                {
+                    "id": "nmap.ldap_info",
+                    "description": "Read the directory root information exposed by an LDAP service",
+                    "level": "N1",
+                    "touches_target": true,
+                    "targets": [
+                        "ActiveDirectory"
+                    ],
+                    "timeout_s": 300,
+                    "argv": [
+                        "nmap",
+                        "-sT",
+                        "-Pn",
+                        "-n",
+                        "-p",
+                        "{ports}",
+                        "--script",
+                        "ldap-rootdse",
+                        "-oX",
+                        "-",
+                        "{host}"
+                    ],
+                    "parameters": {
+                        "host": {
+                            "type": "host"
+                        },
+                        "ports": {
+                            "type": "port_list"
+                        }
+                    },
+                    "output": "xml"
+                },
+                {
+                    "id": "nmap.vuln_scripts",
+                    "description": "Nmap vulnerability detection scripts, intrusive, needs operator approval",
+                    "level": "N2",
+                    "touches_target": true,
+                    "targets": [
+                        "WebApp",
+                        "LinuxMachine",
+                        "ActiveDirectory"
+                    ],
+                    "timeout_s": 1800,
+                    "argv": [
+                        "nmap",
+                        "-sT",
+                        "-Pn",
+                        "-n",
+                        "-T3",
+                        "-p",
+                        "{ports}",
+                        "--script",
+                        "vuln",
+                        "-oX",
+                        "-",
+                        "{host}"
+                    ],
+                    "parameters": {
+                        "host": {
+                            "type": "host"
+                        },
+                        "ports": {
+                            "type": "port_list"
+                        }
+                    },
+                    "output": "xml"
+                }
+            ]
+        },
+        {
+            "name": "whatweb",
+            "kind": "binary",
+            "binary": "whatweb",
+            "version": "0.6.4",
+            "version_argv": [
+                "whatweb",
+                "--version"
+            ],
+            "version_regex": "WhatWeb version ([0-9.]+)",
+            "templates": [
+                {
+                    "id": "whatweb.fingerprint",
+                    "description": "Identify web technologies with a single light request",
+                    "level": "N0",
+                    "touches_target": true,
+                    "targets": [
+                        "WebApp",
+                        "LinuxMachine",
+                        "ActiveDirectory"
+                    ],
+                    "timeout_s": 120,
+                    "argv": [
+                        "whatweb",
+                        "--color=never",
+                        "-q",
+                        "-a",
+                        "1",
+                        "--log-json={out_file}",
+                        "{url}"
+                    ],
+                    "parameters": {
+                        "url": {
+                            "type": "url"
+                        }
+                    },
+                    "output": "json",
+                    "output_file": "out_file"
+                }
+            ]
+        },
+        {
+            "name": "nikto",
+            "kind": "binary",
+            "binary": "nikto",
+            "version": "2.6.1",
+            "version_argv": [
+                "nikto",
+                "-Version"
+            ],
+            "version_regex": "Nikto[^0-9]*([0-9]+\\.[0-9]+\\.[0-9]+)",
+            "templates": [
+                {
+                    "id": "nikto.web_scan_safe",
+                    "description": "Web server scan limited to files, misconfigurations, information disclosure and software identification",
+                    "level": "N1",
+                    "touches_target": true,
+                    "targets": [
+                        "WebApp",
+                        "LinuxMachine",
+                        "ActiveDirectory"
+                    ],
+                    "timeout_s": 420,
+                    "argv": [
+                        "nikto",
+                        "-h",
+                        "{url}",
+                        "-ask",
+                        "no",
+                        "-nointeractive",
+                        "-maxtime",
+                        "300s",
+                        "-Tuning",
+                        "123b",
+                        "-Format",
+                        "json",
+                        "-output",
+                        "{out_file}"
+                    ],
+                    "parameters": {
+                        "url": {
+                            "type": "url"
+                        }
+                    },
+                    "output": "json",
+                    "output_file": "out_file"
+                },
+                {
+                    "id": "nikto.web_scan_extended",
+                    "description": "Adds injection and authentication checks, needs operator approval",
+                    "level": "N2",
+                    "touches_target": true,
+                    "targets": [
+                        "WebApp",
+                        "LinuxMachine",
+                        "ActiveDirectory"
+                    ],
+                    "timeout_s": 720,
+                    "argv": [
+                        "nikto",
+                        "-h",
+                        "{url}",
+                        "-ask",
+                        "no",
+                        "-nointeractive",
+                        "-maxtime",
+                        "600s",
+                        "-Tuning",
+                        "1234ab",
+                        "-Format",
+                        "json",
+                        "-output",
+                        "{out_file}"
+                    ],
+                    "parameters": {
+                        "url": {
+                            "type": "url"
+                        }
+                    },
+                    "output": "json",
+                    "output_file": "out_file"
+                }
+            ]
+        },
+        {
+            "name": "http_client",
+            "kind": "binary",
+            "binary": "curl",
+            "version": "8.23.0",
+            "version_argv": [
+                "curl",
+                "--version"
+            ],
+            "version_regex": "curl ([0-9.]+)",
+            "templates": [
+                {
+                    "id": "http.get",
+                    "description": "Read-only GET request to the WebApp API, no credentials",
+                    "level": "N1",
+                    "touches_target": true,
+                    "targets": [
+                        "WebApp"
+                    ],
+                    "timeout_s": 30,
+                    "argv": [
+                        "curl",
+                        "-sS",
+                        "-i",
+                        "--noproxy",
+                        "*",
+                        "--proto",
+                        "=http,https",
+                        "--max-time",
+                        "15",
+                        "--max-filesize",
+                        "1048576",
+                        "-X",
+                        "GET",
+                        "{url}"
+                    ],
+                    "parameters": {
+                        "url": {
+                            "type": "url"
+                        }
+                    },
+                    "output": "text"
+                },
+                {
+                    "id": "http.get_authenticated",
+                    "description": "GET request that sends a discovered bearer token, needs operator approval",
+                    "level": "N2",
+                    "touches_target": true,
+                    "targets": [
+                        "WebApp"
+                    ],
+                    "timeout_s": 30,
+                    "argv": [
+                        "curl",
+                        "-sS",
+                        "-i",
+                        "--noproxy",
+                        "*",
+                        "--proto",
+                        "=http,https",
+                        "--max-time",
+                        "15",
+                        "--max-filesize",
+                        "1048576",
+                        "-X",
+                        "GET",
+                        "-H",
+                        "{auth_header}",
+                        "{url}"
+                    ],
+                    "parameters": {
+                        "url": {
+                            "type": "url"
+                        },
+                        "auth_header": {
+                            "type": "regex",
+                            "pattern": "^Authorization: Bearer [A-Za-z0-9._~+/=-]{10,2000}$"
+                        }
+                    },
+                    "output": "text"
+                },
+                {
+                    "id": "http.write",
+                    "description": "Request that changes state (POST, PUT, PATCH, DELETE), needs operator approval",
+                    "level": "N2",
+                    "touches_target": true,
+                    "targets": [
+                        "WebApp"
+                    ],
+                    "timeout_s": 30,
+                    "argv": [
+                        "curl",
+                        "-sS",
+                        "-i",
+                        "--noproxy",
+                        "*",
+                        "--proto",
+                        "=http,https",
+                        "--max-time",
+                        "15",
+                        "--max-filesize",
+                        "1048576",
+                        "-X",
+                        "{method}",
+                        "-H",
+                        "Content-Type: application/json",
+                        {
+                            "if": "auth_header",
+                            "args": [
+                                "-H",
+                                "{auth_header}"
+                            ]
+                        },
+                        {
+                            "if": "body",
+                            "args": [
+                                "--data-raw",
+                                "{body}"
+                            ]
+                        },
+                        "{url}"
+                    ],
+                    "parameters": {
+                        "method": {
+                            "type": "enum",
+                            "values": [
+                                "POST",
+                                "PUT",
+                                "PATCH",
+                                "DELETE"
+                            ]
+                        },
+                        "url": {
+                            "type": "url"
+                        },
+                        "body": {
+                            "type": "regex",
+                            "pattern": "^[\\s\\S]{1,4096}$",
+                            "optional": true
+                        },
+                        "auth_header": {
+                            "type": "regex",
+                            "pattern": "^Authorization: Bearer [A-Za-z0-9._~+/=-]{10,2000}$",
+                            "optional": true
+                        }
+                    },
+                    "output": "text"
+                }
+            ]
+        },
+        {
+            "name": "man_page",
+            "kind": "binary",
+            "binary": "man",
+            "version": "2.13.3",
+            "version_argv": [
+                "man",
+                "--version"
+            ],
+            "version_regex": "([0-9]+\\.[0-9]+(\\.[0-9]+)?)",
+            "templates": [
+                {
+                    "id": "man_page.read",
+                    "description": "Read the local manual page of an arsenal tool, one page of text at a time",
+                    "level": "N0",
+                    "touches_target": false,
+                    "timeout_s": 20,
+                    "env": {
+                        "MANWIDTH": "100"
+                    },
+                    "argv": [
+                        "man",
+                        "-P",
+                        "cat",
+                        "{tool}"
+                    ],
+                    "parameters": {
+                        "tool": {
+                            "type": "enum",
+                            "values": [
+                                "nmap",
+                                "whatweb",
+                                "nikto",
+                                "curl"
+                            ]
+                        },
+                        "offset": {
+                            "type": "int_range",
+                            "min": 0,
+                            "max": 1000000,
+                            "optional": true,
+                            "runtime_paging": true
+                        }
+                    },
+                    "paging": {
+                        "param": "offset",
+                        "page_chars": 8000
+                    },
+                    "output": "text"
+                }
+            ]
+        },
+        {
+            "name": "cve_lookup",
+            "kind": "http_api",
+            "version": "NVD API 2.0",
+            "allowed_host": "services.nvd.nist.gov",
+            "rate_limit": {
+                "requests": 5,
+                "per_seconds": 30
+            },
+            "cache_ttl_hours": 24,
+            "templates": [
+                {
+                    "id": "cve_lookup.by_id",
+                    "description": "Look up one CVE identifier",
+                    "level": "N0",
+                    "touches_target": false,
+                    "timeout_s": 30,
+                    "request": {
+                        "method": "GET",
+                        "url": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+                        "query": {
+                            "cveId": "{cve_id}"
+                        }
+                    },
+                    "parameters": {
+                        "cve_id": {
+                            "type": "regex",
+                            "pattern": "^CVE-[0-9]{4}-[0-9]{4,7}$"
+                        }
+                    },
+                    "extract_fields": [
+                        "id",
+                        "descriptions",
+                        "metrics",
+                        "configurations",
+                        "published",
+                        "references"
+                    ],
+                    "output": "json"
+                },
+                {
+                    "id": "cve_lookup.by_product",
+                    "description": "Search CVEs by product name and version",
+                    "level": "N0",
+                    "touches_target": false,
+                    "timeout_s": 30,
+                    "request": {
+                        "method": "GET",
+                        "url": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+                        "query": {
+                            "keywordSearch": "{product} {version}",
+                            "resultsPerPage": "20"
+                        }
+                    },
+                    "parameters": {
+                        "product": {
+                            "type": "regex",
+                            "pattern": "^[A-Za-z0-9][A-Za-z0-9 ._+-]{1,60}$"
+                        },
+                        "version": {
+                            "type": "regex",
+                            "pattern": "^[A-Za-z0-9][A-Za-z0-9._+-]{0,30}$"
+                        }
+                    },
+                    "extract_fields": [
+                        "id",
+                        "descriptions",
+                        "metrics",
+                        "configurations",
+                        "published",
+                        "references"
+                    ],
+                    "output": "json"
+                }
+            ]
+        }
+    ]
+}
