@@ -92,7 +92,7 @@
     ],
     "targets": {
         "vampi": {
-            "display_name": "VAmPI - Vulnerable REST API",
+            "display_name": "WebApp - Vulnerable REST API",
             "allowed_phases": [
                 "Reconnaissance",
                 "API surface mapping",
@@ -116,45 +116,45 @@
             ],
             "limits": [
                 {
-                    "id": "VAMPI-L01",
+                    "id": "WEBAPP-L01",
                     "title": "No lateral movement with discovered credentials"
                 },
                 {
-                    "id": "VAMPI-L02",
+                    "id": "WEBAPP-L02",
                     "title": "Discovered credentials and tokens are reported, never reused elsewhere"
                 },
                 {
-                    "id": "VAMPI-L03",
+                    "id": "WEBAPP-L03",
                     "title": "No access to anything beyond the API itself"
                 },
                 {
-                    "id": "VAMPI-L04",
+                    "id": "WEBAPP-L04",
                     "title": "No attack on the machine hosting the API"
                 },
                 {
-                    "id": "VAMPI-L05",
+                    "id": "WEBAPP-L05",
                     "title": "No password guessing"
                 },
                 {
-                    "id": "VAMPI-L06",
+                    "id": "WEBAPP-L06",
                     "title": "No bulk collection of user data"
                 },
                 {
-                    "id": "VAMPI-L07",
+                    "id": "WEBAPP-L07",
                     "title": "No deletion or tampering of stored data"
                 },
                 {
-                    "id": "VAMPI-L08",
+                    "id": "WEBAPP-L08",
                     "title": "No flooding or load testing"
                 },
                 {
-                    "id": "VAMPI-L09",
+                    "id": "WEBAPP-L09",
                     "title": "Proof limited to the smallest possible sample"
                 }
             ]
         },
         "metasploitable2": {
-            "display_name": "Metasploitable2 - Vulnerable Linux machine",
+            "display_name": "LinuxMachine - Vulnerable Linux machine",
             "allowed_phases": [
                 "Reconnaissance",
                 "Service and version identification",
@@ -179,53 +179,53 @@
             ],
             "limits": [
                 {
-                    "id": "MS2-L01",
+                    "id": "ML2-L01",
                     "title": "No lateral movement from a compromised service"
                 },
                 {
-                    "id": "MS2-L02",
+                    "id": "ML2-L02",
                     "title": "No use of the machine as a stepping stone"
                 },
                 {
-                    "id": "MS2-L03",
+                    "id": "ML2-L03",
                     "title": "No activity after gaining access"
                 },
                 {
-                    "id": "MS2-L04",
+                    "id": "ML2-L04",
                     "title": "No backdoor, new account or scheduled task"
                 },
                 {
-                    "id": "MS2-L05",
+                    "id": "ML2-L05",
                     "title": "Discovered credentials are reported, never reused elsewhere"
                 },
                 {
-                    "id": "MS2-L06",
+                    "id": "ML2-L06",
                     "title": "No password guessing or cracking"
                 },
                 {
-                    "id": "MS2-L07",
+                    "id": "ML2-L07",
                     "title": "No exploitation without approval"
                 },
                 {
-                    "id": "MS2-L08",
+                    "id": "ML2-L08",
                     "title": "No reading or copying of files from the machine"
                 },
                 {
-                    "id": "MS2-L09",
+                    "id": "ML2-L09",
                     "title": "No change to the machine configuration"
                 },
                 {
-                    "id": "MS2-L10",
+                    "id": "ML2-L10",
                     "title": "No action likely to crash a service"
                 },
                 {
-                    "id": "MS2-L11",
+                    "id": "ML2-L11",
                     "title": "No scanning of any address other than this machine"
                 }
             ]
         },
         "goad_mini": {
-            "display_name": "GOAD-Mini - Vulnerable Active Directory lab",
+            "display_name": "ActiveDirectory - Vulnerable Active Directory lab",
             "allowed_phases": [
                 "Reconnaissance",
                 "Service discovery",
@@ -250,47 +250,47 @@
             ],
             "limits": [
                 {
-                    "id": "GOAD-L01",
+                    "id": "ActiveDirectory-L01",
                     "title": "No movement between domain machines"
                 },
                 {
-                    "id": "GOAD-L02",
+                    "id": "ActiveDirectory-L02",
                     "title": "No reuse of discovered credentials, hashes or tickets"
                 },
                 {
-                    "id": "GOAD-L03",
+                    "id": "ActiveDirectory-L03",
                     "title": "No attempt to gain higher privileges"
                 },
                 {
-                    "id": "GOAD-L04",
+                    "id": "ActiveDirectory-L04",
                     "title": "No attempt to take control of the domain"
                 },
                 {
-                    "id": "GOAD-L05",
+                    "id": "ActiveDirectory-L05",
                     "title": "No password guessing that could lock accounts"
                 },
                 {
-                    "id": "GOAD-L06",
+                    "id": "ActiveDirectory-L06",
                     "title": "No change to users, groups or policies"
                 },
                 {
-                    "id": "GOAD-L07",
+                    "id": "ActiveDirectory-L07",
                     "title": "Directory weaknesses are reported by observation only"
                 },
                 {
-                    "id": "GOAD-L08",
+                    "id": "ActiveDirectory-L08",
                     "title": "No extraction of password material"
                 },
                 {
-                    "id": "GOAD-L09",
+                    "id": "ActiveDirectory-L09",
                     "title": "No disruption of domain controllers"
                 },
                 {
-                    "id": "GOAD-L10",
+                    "id": "ActiveDirectory-L10",
                     "title": "Extra tools only if added by the supervisor and read-only"
                 },
                 {
-                    "id": "GOAD-L11",
+                    "id": "ActiveDirectory-L11",
                     "title": "Tool limits on Active Directory are stated, not worked around"
                 }
             ]

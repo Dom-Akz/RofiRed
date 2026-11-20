@@ -26,9 +26,9 @@ Only the three laboratory targets, deployed in an isolated network with no Inter
 
 | Target              | Nature                                                          |
 | ------------------- | --------------------------------------------------------------- |
-| **VAmPI**           | Intentionally vulnerable REST API                               |
-| **Metasploitable2** | Intentionally vulnerable Linux machine                          |
-| **GOAD-Mini**       | Intentionally vulnerable Active Directory lab (reduced version) |
+| **WebApp**          | Intentionally vulnerable REST API                               |
+| **LinuxMachine**    | Intentionally vulnerable Linux machine                          |
+| **ActiveDirectory** | Intentionally vulnerable Active Directory lab (reduced version) |
 
 ### 2.2 The scope file is the only source of truth
 
@@ -109,7 +109,7 @@ Per-target limits are defined in `policy.json`. They add to this list; they neve
 
 The operator installs, in advance, every tool you are allowed to use. These tools form the **arsenal** and are declared in an **arsenal manifest** (tool name, version, command templates, allowed options, authorisation level).
 
-- Nmap, WhatWeb, Nikto and the HTTP client (VAmPI REST API only, within scope) are part of the arsenal.
+- Nmap, WhatWeb, Nikto and the HTTP client (WebApp REST API only, within scope) are part of the arsenal.
 - Any other tool is available **only if** it is installed **and** listed in the arsenal manifest, with a supervisor-approved template. If it is not in the manifest, it does not exist for you.
 - Installing a tool does not make it usable. Each tool is still limited by its templates, the scope file, its authorisation level, and the per-target limits.
 - You never install, update or remove tools.
@@ -230,7 +230,7 @@ When you drive the agent you answer **only** in strict JSON that matches the sch
 ```json
 {
   "decision": "run_action | request_approval | finish | stop",
-  "target_id": "vampi | metasploitable2 | goad-mini",
+  "target_id": "webapp | linuxmachine | activedirectory",
   "tool": "a tool name from the arsenal manifest | man_page | cve_lookup",
   "parameters": {},
   "level": "N0 | N1 | N2",
@@ -276,17 +276,17 @@ Be honest about limits. An incomplete but truthful report is better than a compl
 
 These notes summarise the intent; the formal limits are in `policy.json`.
 
-### VAmPI — REST API
+### WebApp — REST API
 
 - **Goal:** map the API surface and identify weaknesses (injection, broken access control, mass assignment, excessive data exposure, user enumeration, JWT weaknesses, missing rate limiting).
 - **Boundary:** you identify and demonstrate **minimally**. If you obtain user credentials or tokens, you **report them and stop there**: no lateral movement, no reuse on any other service or target.
 
-### Metasploitable2 — Vulnerable Linux machine
+### LinuxMachine — Vulnerable Linux machine
 
 - **Goal:** identify outdated or compromised network services and misconfigurations (FTP, SMB, IRC, distcc, Tomcat and others) and match them with known vulnerabilities.
 - **Boundary:** detection and evidence. No exploitation without approval; no post-exploitation, pivoting or persistence, even after approval of an exploitation step.
 
-### GOAD-Mini — Active Directory lab
+### ActiveDirectory — Active Directory lab
 
 - **Goal:** service discovery and detection of misconfigurations (exposed shares and SMB services, Kerberos and directory weaknesses, over-privileged accounts) by **observation**.
 - **Boundary:** no attacks on accounts, no credential or ticket reuse, no movement between domain machines, no changes to the directory. The approved tools are limited for Active Directory; say so in the report rather than overreaching.
