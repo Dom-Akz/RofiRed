@@ -4,16 +4,20 @@
     "policy_version": "1.0",
     "files": [
         {
-            "file": "policy/MissionPolicy.md",
+            "file": "../policy/MissionPolicy.md",
             "hash": "ae9d4bee60c10e749093806aa9a5ca7781662ff2e4a3243bc8f707bb253032e7"
         },
         {
-            "file": "policy/policy.json",
+            "file": "../policy/policy.json",
             "hash": "9c5ad56875c00dc72a6146517ab29878b9b9b4618b0229474e6f5b327a1a91e3"
         },
         {
-            "file": "policy/scope.json",
+            "file": "../policy/scope.json",
             "hash": "6a8513991ebb0da39b951a94fc1f83e729b89c773fee04c6d2f1f30d6314ff63"
-        }
+        },
+        {
+            "file": "../policy/arsenal.json",
+            "hash": "c923c695e3ca9a1f838737624cc0491f546fea8981cd975924fa0d429ccbc072"
+        },
     ]
 }
